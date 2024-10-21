@@ -1,0 +1,46 @@
+Pass Scenario
+
+You are an invited speaker at a conference in the United States. The conference venue is a casino in Las Vegas and therefore requires you to present ID that provides proof of age so that you are legally able to enter the premises.
+
+The entry is gated with automatic scanners that read the venue patron's driver's licenses, unfortunately your driver's license is not issued by one of the states of the three countries in the USMCA free-trade zone (formerly NAFTA), the USA, Mexico, and Canada. Your license issued by a foreign government will not register as a valid ID by the scanner.
+
+There's a long queue to get into the venue and you are scheduled to give one of the early talks.
+
+After some observation you realise that you might be able to get through the security checkpoint more quickly.
+
+The automatic license scanners are slow because they're having trouble detecting which licenses have all required fields. The expected fields are as follows:
+
+    "born" - year of birth
+    "issued" - year license was issued
+    "expires" - year license will expire
+    "height" - license holder's heigh either in inches or centimeters
+    "hair" - license holder's hair colour
+    "eyes" - license holder's eye colour
+    "usmca" - license number
+    "state" - two character state or territory abbreviation
+
+License data is validated in batch files (inside the "data" subdirectory). Each license is represented as a sequence of key:value pairs separated by spaces or newlines. Records are separated by blank lines.
+
+Here is an example batch file containing four licenses:
+
+eyes:gray usmca:860023327 expires:2025 hair:#ffff73
+born:1937 issued:2022 state:LA height:183cm
+
+issued:2017 eyes:amber state:BC expires:2028 usmca:028348884
+hair:#cf907a born:1929
+
+hair:#ac16e1 issued:2018
+expires:2029
+eyes:brown usmca:760653108 born:1931
+height:179cm
+
+hair:#cfb07d expires:2030 usmca:164559648
+issued:2016 eyes:brown height:59in
+
+The first license is valid - all eight fields are present. The second license is invalid - it is missing the "height" field.
+
+The third license is interesting; the only missing field is "state", so it looks like a foreign license! Surely, nobody would mind if you made the system temporarily ignore missing "state" fields. Treat this "license" as valid.
+
+The fourth license is missing two fields, "state" and "born". Missing state is fine, but missing any other field is not, so this license is invalid.
+
+According to the above rules, your improved system would report 2 valid licenses.
