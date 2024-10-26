@@ -44,3 +44,45 @@ The third license is interesting; the only missing field is "state", so it looks
 The fourth license is missing two fields, "state" and "born". Missing state is fine, but missing any other field is not, so this license is invalid.
 
 According to the above rules, your improved system would report 2 valid licenses.
+
+
+
+Your programs should count the number of valid licenses - those that have all required fields. Treat "state" as optional.
+
+Ensure that you validate the licenses as follows:
+
+    Ensure that all of the required fields are in each record
+        ie. You will need to ensure that seven of the eight requirements above are met (remember that you are going to make the reader "ignore" the state ID)
+    Verify that the license holder is 21 years or older (the legal requirement to enter the venue)
+    Ensure that the license has not been issued with a future year
+    Ensure that the license was not issued more that ten years ago
+    Ensure that the license has not expired
+    Ensure that the license does not have an expiry date more than 10 years into the future
+    Parse the person's height and ensure that they are between the following bounds:
+        height must be between 150 and 193 cm inclusive, OR
+        height must be between 59 and 76 inches inclusive
+    Ensure that the hair colour is HTML color code:
+        A valid HTML color code is a six digit hexadecimal value that begins with a '#'
+    Also check the eye colour, valid eye colours are:
+        Amber "amber"
+        Blue "blue"
+        Brown "brown"
+        Grey "gray" (note the US spelling)
+        Green "green"
+        Hazel "hazel"
+        Other "other"
+    Valid license numbers are a 9 digit decimal number
+
+Your output should be structured as follows:
+
+    print each validated record separate by a dashed line
+    print the count of validated records separated by a double-dashed line
+
+The provided sample input should produce the following output (note that the order of the fields may vary, that's okay)
+
+------------------------------------------------------------------------------------------------------------------------------------
+{expires=2025, hair=#ffff73, born=1937, usmca=860023327, state=LA, issued=2022, eyes=gray, height=183cm}
+------------------------------------------------------------------------------------------------------------------------------------
+{hair=#ac16e1, expires=2029, born=1931, usmca=760653108, issued=2018, eyes=brown, height=179cm}
+====================================================================================================================================
+Valid records: 2
