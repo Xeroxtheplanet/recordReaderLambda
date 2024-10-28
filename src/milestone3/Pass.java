@@ -16,7 +16,8 @@ import java.lang.Object.*;
 
 
 public class Pass {
-	String answer = "-".repeat(132)+"\n";
+	String answer = "";
+	int recordsValidated = 0;
 	//List<CRecord> recordList = new ArrayList<CRecord>(); //set pointer to recordArr
 	//Map<String,String> obj = new HashMap<String,String>();
 	
@@ -28,8 +29,9 @@ public class Pass {
 	
 	class Record { //inner class Record with fields transcribed from hashmap.
 		
-		String recordStr = "{";
+		String recordStr = "-".repeat(132)+"\n{";
 		int fieldsValidated = 0; //if the value does not 
+		
 		//HashMap<String, String> recordkvToValidate; //pointer to hashmap
 		
 		/*construct and validate the record here by going through hashmap
@@ -53,7 +55,7 @@ public class Pass {
 				try{
 					if ((k.equals("born") && ((2024 - vVal)>21)) || //over age 21
 						(k.equals("issued") && Integer.parseInt(v)<=2024 && (2024-Integer.parseInt(v))<=10) || //before or on 2024 and was issued less than 10 years ago
-						(k.equals("expires") && Integer.parseInt(v)>2024) || //ensure it has not expired
+						(k.equals("expires") && Integer.parseInt(v)>2024 && Integer.parseInt(v)<=2034) || //ensure it has not expired and not over ten years into the future
 						(k.equals("height") && ((vVal>150 && vVal<193) || (vVal>59 && vVal<76))) || //between 150cm and 193cm inclusive or height between 59 and 76 inches
 						(k.equals("hair") && (
 													v.startsWith("#") && 
@@ -68,7 +70,7 @@ public class Pass {
 												  	v.equals("hazel") ||
 												  	v.equals("other")
 												  	)) ||
-						(k.equals("usmca") && (licenseAccept.indexOf(v)!=-1 &&
+						(k.equals("usmca") && (v.matches("^[0-9_]+$") &&
 												   	v.length()==9)
 						)
 					)
@@ -87,16 +89,18 @@ public class Pass {
 				}
 			});
 
-			recordStr += "\b\b}"; //complete the record once each pair has been dealt with and 2 backslash to reduce comma and space at end
+			recordStr += "\b\b}\n"; //complete the record once each pair has been dealt with and 2 backslash to reduce comma and space at end
 			
 
 		}
 
 		String getRecordStr(){ //getter for recordStr
 			if(fieldsValidated>=7){ //if the fields validated is seven or more than return the string
+				recordsValidated+=1;
 				return recordStr;
 			}
-			return recordStr+"\n"; //if null, it is not a valid record so add nothing
+			//return recordStr+"\n"; //if null, it is not a valid record so add nothing
+			return "";
 		}
 	}
 	
@@ -136,28 +140,26 @@ public class Pass {
 			Stream<String> myStreamOfLines = Arrays.stream(lines.collect(Collectors.joining("\n")).split("\n{2}")); 
 			// Parse input into records on basis regex basis \n{2} (two consecutive \n) (note: joining on \n just joins them together so they are treated as one element in the stream)
 
-			
+			lines.close(); //no longer needed so close memory leak
 			
 			myStreamOfLines.forEach(str -> {
 				Map<String,String> obj = Arrays.stream(str.split(" |\n")) //for each string, split on regex twice first on the spaceor a new line then on the kvpair
 											.map(kvPair -> kvPair.split(":"))
-											.filter(Arr -> Arr.length==2)
+											//.filter(Arr -> Arr.length==2) probably not needed
 											.collect(Collectors.toMap(arr -> arr[0], arr -> arr[1])); //buffer for validation
     			//String[] parts = str.split(":"); //split each section on basis of delimiter : not needed anymore
     			//obj.put(parts[0], parts[1]);
 				Record recordToCheck = c.new Record(obj);
 				c.answer+=recordToCheck.getRecordStr();
-				c.answer+="TEST: Fields validated for record is " + recordToCheck.fieldsValidated+"\n";
-				c.answer+="-".repeat(132)+"\n";
+				//c.answer+="TEST: Fields validated for record is " + recordToCheck.fieldsValidated+"\n";
 				//System.out.println(obj.get("hair"));
-				//TEST:
 				
 				obj.clear(); //clear for next record
 
   			});
 			
 
-			System.out.println(c.answer);
+			System.out.println(c.answer + "=".repeat(132) + "\nValid records: "+ c.recordsValidated); //end it with this
 			
 
 
